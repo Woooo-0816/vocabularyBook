@@ -197,7 +197,132 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
+        //  修改按钮
+        try {
+            Button fix_btn = findViewById(R.id.fix_btn);
+            fix_btn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
 
+                    android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(MainActivity.this);
+                    LayoutInflater layoutInflater = getLayoutInflater();
+                    final View view1 = layoutInflater.inflate(R.layout.addword, null);
+                    builder.setView(view1);
+                    builder.setTitle("修改");
+                    builder.setPositiveButton("cancel", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                        }
+                    });
+                    builder.setNegativeButton("ok", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            EditText edit_eng_txt = view1.findViewById(R.id.addWord);
+                            EditText edit_chn_txt = view1.findViewById(R.id.addExp);
+//                            EditText edit_sen_txt = view1.findViewById(R.id.addSen);
+                            SQLiteDatabase db = dbHelper.getWritableDatabase();
+                            try {
+                                ContentValues values = new ContentValues();
+                                values.put("CHN", edit_chn_txt.getText().toString());
+                                db.update("Word", values, "ENG = ?", new String[]{edit_eng_txt.getText().toString()});
+                                try {
+                                    words.clear();
+                                    SQLiteDatabase db1 = dbHelper.getWritableDatabase();
+                                    String[] coiumns = {"ENG", "CHN", "SEN"};
+                                    Cursor cursor = db1.query("Word", coiumns, null, null, null, null, null);
+                                    if (cursor.moveToFirst()) {
+                                        do {
+                                            words.add(new Word(cursor.getString(0), cursor.getString(1), cursor.getString(2)));
+                                        } while (cursor.moveToNext());
+                                    }
+                                    cursor.close();
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                                Toast.makeText(MainActivity.this, "修改成功", Toast.LENGTH_SHORT).show();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                                Toast.makeText(MainActivity.this, "修改失败", Toast.LENGTH_SHORT).show();
+                            }
+                            ListView listView = findViewById(R.id.list_view);
+                            listView.setAdapter(adapter);
+                            refresh();
+                        }
+                    });
+                    builder.show();
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        //模糊查询
+        try {
+            Button fuzzy_que_btn = findViewById(R.id.fuzzy_que_btn);
+            fuzzy_que_btn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    words.clear();
+                    EditText text = findViewById(R.id.query);
+                    SQLiteDatabase db = dbHelper.getWritableDatabase();
+                    try {
+                        Cursor cursor = db.rawQuery("Select * from Word where CHN = ?", new String[]{text.getText().toString()});
+
+                        if (cursor.moveToFirst()) {
+                            do {
+                                words.add(new Word(cursor.getString(cursor.getColumnIndex("ENG")),cursor.getString(cursor.getColumnIndex("CHN")), cursor.getString(cursor.getColumnIndex("SEN"))));
+//                            Log.e("messagesss","word");
+                            } while (cursor.moveToNext());
+                        }
+                        cursor.close();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    refresh();
+                    ListView listView = findViewById(R.id.list_view);
+                    listView.setAdapter(adapter);
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+        EditText text = findViewById(R.id.query);
+        text.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                EditText text = findViewById(R.id.query);
+                SQLiteDatabase db = dbHelper.getWritableDatabase();
+                try {
+                    words.clear();
+                    String str = "%" + text.getText().toString() + "%";
+                    Cursor cursor = db.rawQuery("Select * from Word where ENG like ?", new String[]{str});
+                    if (cursor.moveToFirst()) {
+                        do {
+                            words.add(new Word(cursor.getString(cursor.getColumnIndex("ENG")),cursor.getString(cursor.getColumnIndex("CHN")), cursor.getString(cursor.getColumnIndex("SEN"))));
+//                            Log.e("messagesss","word");
+                        } while (cursor.moveToNext());
+                    }
+                    cursor.close();
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Toast.makeText(MainActivity.this, "查无此词", Toast.LENGTH_SHORT).show();
+                }
+                ListView listView = findViewById(R.id.list_view);
+                listView.setAdapter(adapter);
+            }
+        });
     }
 
 
