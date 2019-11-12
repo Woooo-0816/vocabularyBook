@@ -3,18 +3,82 @@
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <fragment
-        android:id="@+id/left_fragment"
-        android:name="com.example.vocabularybook.LeftFragment"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_width="0dp"
-        android:layout_weight="1"
-        />
-    <fragment
-        android:id="@+id/right_fragment"
-        android:name="com.example.vocabularybook.RightFragment"
-        android:layout_height="match_parent"
-        android:layout_width="0dp"
-        android:layout_weight="3"
-        />
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:background="#E0FFFF">
+
+            <EditText
+                android:id="@+id/query"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginBottom="5dp"
+                android:hint="查询"
+                android:background="#E6E6FA"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="4"
+            android:orientation="horizontal">
+            <fragment
+                android:id="@+id/left_fragment"
+                android:name="com.example.vocabularybook.LeftFragment"
+                android:layout_width="150dp"
+                android:layout_height="match_parent"
+                />
+            <fragment
+                android:id="@+id/right_fragment"
+                android:name="com.example.vocabularybook.RightFragment"
+                android:layout_width="430dp"
+                android:layout_height="match_parent"
+                />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_gravity="center"
+                android:gravity="center">
+                <Button
+                    android:id="@+id/new_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="添加"
+                    android:textSize="20dp">
+
+                </Button>
+                <Button
+                    android:id="@+id/fix_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="修改"
+                    android:textSize="20dp">
+
+                </Button>
+                <Button
+                    android:id="@+id/fuzzy_que_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="查询"
+                    android:textSize="20dp">
+
+                </Button>
+            </LinearLayout>
+        </LinearLayout>
+
+    </LinearLayout>
 </LinearLayout>
