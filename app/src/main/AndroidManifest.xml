@@ -9,6 +9,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <provider
+            android:authorities="com.example.vocabularybook.provider"
+            android:name=".DatabaseProvider"
+            android:exported="true"></provider>
         <activity
             android:name=".MainActivity"
             android:windowSoftInputMode="adjustPan">

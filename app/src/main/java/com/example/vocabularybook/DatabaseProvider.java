@@ -1,4 +1,4 @@
-package com.example.mywordsbook;
+package com.example.vocabularybook;
 
 import android.content.ContentProvider;
 import android.content.ContentValues;
